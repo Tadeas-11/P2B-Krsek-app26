@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EcoWrite - Ekologické papírnictví</title>
+    <style>
+        :root {
+            --primary: #2e7d32;
+            --primary-light: #e8f5e9;
+            --dark: #2c3e50;
+            --light: #f9f9f9;
+            --border: #e0e0e0;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--light);
+            color: var(--dark);
+            line-height: 1.6;
+            padding-bottom: 60px;
+        }
+
+        header {
+            background-color: white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        /* LOGO A NÁZEV FIRMY */
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-icon {
+            background-color: var(--primary);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.4rem;
+        }
+
+        .brand-name {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--dark);
+        }
+
+        .brand-name span {
+            color: var(--primary);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        h2 {
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--primary-light);
+        }
+
+        /* PRODUKTY */
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .product-card {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .product-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+
+        .product-name {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .product-desc {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 1rem;
+            flex-grow: 1;
+        }
+
+        .product-price {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .quantity-control {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .quantity-control input {
+            width: 60px;
+            padding: 0.4rem;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            text-align: center;
+        }
+
+        /* KOŠÍK A FORMULÁŘ */
+        .sidebar {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.5rem;
+            position: sticky;
+            top: 100px;
+            height: fit-content;
+        }
+
+        .summary-box {
+            background: var(--primary-light);
+            padding: 1rem;
+            border-radius: 6px;
+            margin-bottom: 1.5rem;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .summary-row.total {
+            font-size: 1.2rem;
+            font-weight: 700;
+            border-top: 1px solid #c8e6c9;
+            padding-top: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.3rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 0.6rem;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            outline: none;
+        }
+
+        .form-group input:focus {
+            border-color: var(--primary);
+        }
+
+        .btn-submit {
+            display: block;
+            width: 100%;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 1rem;
+            font-size: 1rem;
+            font-weight: 700;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.2s;
+            margin-top: 1.5rem;
+        }
+
+        .btn-submit:hover {
+            background-color: #1b5e20;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-container">
+            <div class="logo-area">
+                <div class="logo-icon">🌿</div>
+                <div class="brand-name">Eco<span>Write</span></div>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <section>
+            <h2>Naše nabídka</h2>
+            <div class="products-grid" id="products-container">
+                <p>Načítám produkty...</p>
+            </div>
+        </section>
+
+        <aside class="sidebar">
+            <h2>Objednávka</h2>
+            
+            <div class="summary-box">
+                <div class="summary-row">
+                    <span>Počet kusů:</span>
+                    <span id="total-count">0 ks</span>
+                </div>
+                <div class="summary-row total">
+                    <span>Celková cena:</span>
+                    <span id="total-price">0 Kč</span>
+                </div>
+            </div>
+
+            <form id="order-form" onsubmit="sendOrder(event)">
+                <div class="form-group">
+                    <label for="customer-name">Jméno a příjmení</label>
+                    <input type="text" id="customer-name" required placeholder="Jan Novák">
+                </div>
+                <div class="form-group">
+                    <label for="customer-email">E-mail</label>
+                    <input type="email" id="customer-email" required placeholder="jan.novak@seznam.cz">
+                </div>
+                <div class="form-group">
+                    <label for="customer-phone">Telefon</label>
+                    <input type="tel" id="customer-phone" required placeholder="+420 123 456 789">
+                </div>
+
+                <button type="submit" class="btn-submit">ODESLAT OBJEDNÁVKU</button>
+            </form>
+        </aside>
+    </main>
+
+    <script>
+        // Globální pole pro uchování načtených produktů
+        let products = [];
+        // Stav košíku (id_produktu -> mnozstvi)
+        let cart = {};
+
+        // Načtení dat z externího CSV souboru při načtení stránky
+        window.addEventListener('DOMContentLoaded', () => {
+            fetch('data.csv')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Nepodařilo se načíst CSV soubor.');
+                    }
+                    return response.text();
+                })
+                .then(csvText => {
+                    parseCSV(csvText);
+                    renderProducts();
+                })
+                .catch(error => {
+                    console.error('Chyba:', error);
+                    document.getElementById('products-container').innerHTML = 
+                        '<p style="color:red;">Nepodařilo se načíst produkty. Zkontrolujte soubor data.csv.</p>';
+                });
+        });
+
+        // Jednoduchý parser CSV textu
+        function parseCSV(text) {
+            const lines = text.split('\n');
+            // Přeskočíme hlavičku (index 0)
+            for (let i = 1; i < lines.length; i++) {
+                const line = lines[i].trim();
+                if (!line) continue;
+                
+                const columns = line.split(',');
+                if (columns.length >= 3) {
+                    products.push({
+                        id: columns[0].trim(),
+                        name: columns[1].trim(),
+                        price: parseInt(columns[2].trim()),
+                        desc: columns[3] ? columns[3].trim() : ''
+                    });
+                }
+            }
+        }
+
+        // Vykreslení produktů do HTML
+        function renderProducts() {
+            const container = document.getElementById('products-container');
+            container.innerHTML = '';
+
+            products.forEach(product => {
+                const card = document.createElement('div');
+                card.className = 'product-card';
+                card.innerHTML = `
+                    <div>
+                        <div class="product-name">${product.name}</div>
+                        <div class="product-desc">${product.desc}</div>
+                    </div>
+                    <div>
+                        <div class="product-price">${product.price} Kč</div>
+                        <div class="quantity-control">
+                            <label>Ks:</label>
+                            <input type="number" min="0" value="0" data-id="${product.id}" onchange="updateCart(this)">
+                        </div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        // Aktualizace košíku a přepočet cen
+        function updateCart(input) {
+            const productId = input.dataset.id;
+            const quantity = parseInt(input.value) || 0;
+
+            if (quantity > 0) {
+                cart[productId] = quantity;
+            } else {
+                delete cart[productId];
+            }
+
+            calculateTotals();
+        }
+
+        // Výpočet celkového počtu kusů a ceny
+        function calculateTotals() {
+            let totalCount = 0;
+            let totalPrice = 0;
+
+            for (const productId in cart) {
+                const product = products.find(p => p.id === productId);
+                if (product) {
+                    totalCount += cart[productId];
+                    totalPrice += cart[productId] * product.price;
+                }
+            }
+
+            document.getElementById('total-count').innerText = totalCount + ' ks';
+            document.getElementById('total-price').innerText = totalPrice + ' Kč';
+        }
+
+        // Odeslání objednávky přes mailto
+        function sendOrder(event) {
+            event.preventDefault(); // Zamezí obnovení stránky
+
+            // Kontrola, zda je v košíku vůbec nějaké zboží
+            if (Object.keys(cart).length === 0) {
+                alert('Váš košík je prázdný! Zadejte prosím množství u vybraných produktů.');
+                return;
+            }
+
+            // Načtení kontaktních údajů
+            const name = document.getElementById('customer-name').value;
+            const email = document.getElementById('customer-email').value;
+            const phone = document.getElementById('customer-phone').value;
+
+            // Sestavení přehledu produktů do textu mailu
+            let orderItemsText = '';
+            let totalCount = 0;
+            let totalPrice = 0;
+
+            for (const productId in cart) {
+                const product = products.find(p => p.id === productId);
+                if (product) {
+                    const itemCost = cart[productId] * product.price;
+                    orderItemsText += `- ${product.name} | ${cart[productId]} ks | ${itemCost} Kč\n`;
+                    totalCount += cart[productId];
+                    totalPrice += itemCost;
+                }
+            }
+
+            // Výsledný e-mailový příjemce podle aktualizovaného zadání
+            const recipient = 'app@kostka-skola.cz';
+            const subject = encodeURIComponent(`Nová objednávka - EcoWrite - ${name}`);
+            
+            let bodyText = `VÁŽENÝ ZÁKAZNÍKU, DĚKUJEME ZA VAŠI OBJEDNÁVKU.\n\n`;
+            bodyText += `--- SOUHRN OBJEDNÁVKY ---\n`;
+            bodyText += orderItemsText;
+            bodyText += `\nCelkový počet kusů: ${totalCount} ks\n`;
+            bodyText += `Celková cena: ${totalPrice} Kč\n\n`;
+            bodyText += `--- KONTAKTNÍ ÚDAJE ---\n`;
+            bodyText += `Jméno a příjmení: ${name}\n`;
+            bodyText += `E-mail: ${email}\n`;
+            bodyText += `Telefon: ${phone}\n`;
+
+            const body = encodeURIComponent(bodyText);
+
+            // Spuštění e-mailového klienta na zařízení uživatele
+            window.location.href = `mailto:${recipient}?subject=${subject}&body=${body}`;
+        }
+    </script>
+</body>
+</html>
